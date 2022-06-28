@@ -8,7 +8,7 @@ import {
   import { IShoppingItem } from '../models/shopping-list.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { ICategory, IGroupedCategory } from '../models/categories.model';
-import { BehaviorSubject, map, skip, Subscription, take, tap } from 'rxjs';
+import { BehaviorSubject, Subscription, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -55,28 +55,23 @@ export class ShoppingListService {
       });
   }
 
-  public fetchShoppingListByCategoryId(categoryId?: string) {
-    this._loading$.next(true);
-    this._afs.collection<IShoppingItem>(`users/${this.authService.uid}/shopping-list`,
-      ref => (categoryId ? ref.where('categoryId', '==', categoryId) : ref))
-      .valueChanges({ idField: 'id' })
-      .pipe(take(1))
-      .subscribe({
-        next: (items) => {
-          this._shoppingList$.next(items);
-          this._loading$.next(false);
-        },
-        error: (err) => {
-          this._loading$.next(false);
-        },
-      });
-  }
-
   public fetchShoppingList(categoryId?: string) {
     this._loading$.next(false);
 
     return this._afs.collection<IShoppingItem>(`users/${this.authService.uid}/shopping-list`, ref => (categoryId ? ref.where('categoryId', '==', categoryId) : ref))
     .valueChanges({ idField: 'id' })
+  }
+
+  public filterExpiredItems() {
+    const checkingDate = new Date().getTime()
+  
+    const shoppingListQuery = this._shoppingListCollection.ref.where('date', '<=', checkingDate);
+
+    shoppingListQuery.get().then(shoppingList => {
+      shoppingList.forEach(element => {
+        element.ref.delete()
+      })
+    })
   }
 
   public addShoppingItem(data: IShoppingItem) {

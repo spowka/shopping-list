@@ -4,10 +4,8 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subscription } from 'rxjs';
 import { ShoppingListService } from './../services/shopping-list.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { ICategory, ECategories, TCategory, IGroupedCategory } from '../models/categories.model';
+import { ECategories, IGroupedCategory } from '../models/categories.model';
 import { IShoppingItem } from '../models/shopping-list.model';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({
   selector: 'app-shopping-list',
@@ -28,8 +26,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   constructor(
     private shoppingListService: ShoppingListService,
-    private authService: AuthService,
-    private afs: AngularFirestore,
     private modalService: NgbModal
   ) {
     this.loading$ = shoppingListService.loading$;
@@ -40,11 +36,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.shoppingListService.fetchCategories();
     this.shoppingListService.fetchShoppingList();
+    this.shoppingListService.filterExpiredItems();
   }
 
   public onChangeCategory(categoryId?: string) {
-    this.selectedCategory = categoryId
-    this.shoppingList$ = this.shoppingListService.fetchShoppingList(categoryId)
+    this.selectedCategory = categoryId;
+    this.shoppingList$ = this.shoppingListService.fetchShoppingList(categoryId);
   }
 
   public onAddItem() {
@@ -55,8 +52,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.add(
       this.modalRef.closed.subscribe(res => {
         if (res) {
-          const date = new Date();
-          this.shoppingListService.addShoppingItem({ ...res, date })
+          const expiredDate = new Date();
+
+          if (expiredDate.getHours() >= 13) {
+            expiredDate.setDate(expiredDate.getDate() + 1)
+          }
+
+          this.shoppingListService.addShoppingItem({ ...res, date: expiredDate.setHours(13, 0, 0, 0) });
         }
       })
     )
@@ -79,13 +81,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteItem(id: string) {
-    if (!id) return
+    if (!id) return;
 
-    this.shoppingListService.deleteShoppingItem(id)
+    this.shoppingListService.deleteShoppingItem(id);
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe$.unsubscribe()
+    this.unsubscribe$.unsubscribe();
   }
 
 }
