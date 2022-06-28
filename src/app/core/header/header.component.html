@@ -1,0 +1,21 @@
+<div class="navbar-wrapper" *ngIf="showHeader; else logoutHeader">
+  <nav class="navbar navbar-expand navbar-light">
+    <a class="navbar-brand">iShop</a>
+    <div class="navbar-links">
+      <a class="nav-item nav-link active">Shopping List</a>
+      <div class="navbar-nav" (click)="logout()">
+        <a class="nav-item nav-link nav-logout">Log out</a>
+        <i class="bi bi-door-open"></i>
+      </div>
+    </div>
+  </nav>
+</div>
+<ng-template #logoutHeader>
+  <div class="navbar-logout__wrapper">
+    <div class="navbar-logout__title">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-logout__brand navbar-brand">iShop</a>
+      </nav>
+    </div>
+  </div>
+</ng-template>

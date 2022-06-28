@@ -1,0 +1,53 @@
+<div class="sign-in">
+  <div class="container">
+    <div class="sign-in__wrapper">
+      <div class="sign-in__body row">
+        <div class="sign-in__title col-12 mb-10">Welcome back</div>
+        <div class="sign-in__form col-12">
+          <form class="form-group" [formGroup]="form"
+            (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="sign-in__input-wrapper col-12">
+                <label class="sign-in__input-lable" for="email">Email</label>
+                <input id="email" class="sign-in__input form-control"
+                  [class.is-invalid]="email?.invalid && email?.touched" type="email"
+                  formControlName="email" placeholder="Enter your email" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="sign-in__input-wrapper col-12">
+                <label class="sign-in__input-lable" for="password">Password</label>
+                <div class="input-group">
+                  <input id="password" class="sign-in__input form-control"
+                    [type]="passwordVisible ? 'text' : 'password'"
+                    [class.is-invalid]="password?.invalid && password?.touched"
+                    formControlName="password" placeholder="Enter your password" />
+                  <span class="input-group-text sign-in__input-icon" (click)="passwordVisible = !passwordVisible">
+                    <i *ngIf="!passwordVisible; else passwordVisibleIcon" class="bi bi-eye"></i>
+                    <ng-template #passwordVisibleIcon>
+                      <i class="bi bi-eye-slash"></i>
+                    </ng-template>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button class="btn btn-warning" type="submit" [disabled]="(loading$ | async)">
+                  <span *ngIf="(loading$ | async); else submitButtonLabel" class="spinner-grow spinner-grow-sm"
+                    role="status" aria-hidden="true"></span>
+                  <ng-template #submitButtonLabel>
+                    Login
+                  </ng-template>
+                </button>
+                <div class="text-center mt-3">
+                  <span>Don't have an account? <a [routerLink]="['/', 'register']">Sign Up</a></span>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

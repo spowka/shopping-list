@@ -1,0 +1,92 @@
+.dark-modal .modal-content {
+  background-color: #292b2c;
+  color: #f3f4f4;
+}
+
+.dark-modal .close {
+  color: #f3f4f4;
+}
+
+.light-blue-backdrop {
+  background-color: #5cb3fd;
+}
+
+
+.shopping-dialog {
+  &__wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__input {
+    resize: none;
+    overflow: hidden;
+  }
+
+  &__body {
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 25px;
+    width: 400px;
+    height: 400px;
+    background-color: #232d36;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    border-radius: 4px;
+  }
+
+  &__title {
+    color: #f3f4f4;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    text-align: center;
+    flex-basis: 60px;
+  }
+
+  &__form {
+    flex-grow: 1;
+
+    .form-group {
+      height: 100%;
+      display: flex;
+      flex-basis: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .row {
+      margin-bottom: 23px;
+    }
+  }
+
+  &__input {
+    color: #f3f4f4;
+    background-color: #303a42;
+    border-color: #303a42;
+
+    &::placeholder {
+      color: #737a80;
+    }
+
+    &-lable {
+      color: #737a80;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+  }
+
+  ::ng-deep {
+    #categoryDropdown {
+      width: 100%;
+      background-color: #303a42;
+    }
+
+    .dropdown-menu {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+#categoryDropdown {
+  background-color: #232d36;
+  color: #f3f4f4;
+  border: none;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  &::before,
+  &::after {
+    content: none;
+  }
+
+  .bi-caret-down-fill {
+    margin-left: 15px;
+  }
+}
+
+.dropdown {
+  min-width: 170px;
+}
+
+.dropdown-menu {
+  width: 100%;
+  min-width: 0;
+}

@@ -1,0 +1,61 @@
+<div class="shopping-list">
+  <div class="container">
+    <div class="row row-cols-auto align-items-center">
+      <div class="col-12 col-md text-center text-md-start mb-4 mb-md-0">
+        <h1>Shopping List</h1>
+      </div>
+      <div class="col-6 shopping-list__category">
+        <app-category-select (categoryChange)="onChangeCategory($event)" [selected]="selectedCategory" [canSelectAll]="true">
+        </app-category-select>
+        <div class="add-item">
+          <button class="btn btn-warning" type="submit" (click)="onAddItem()">
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="shoping-items">
+      <ng-container *ngIf="!(loading$ | async); else loadingSpinner">
+        <ng-container *ngIf="shoppingList$ | async as shoppingList">
+         <ng-container *ngIf="shoppingList.length; else noItems">
+          <div class="col shopping-item__wrapper" *ngFor="let item of shoppingList">
+            <div class="shopping-item__info">
+              <div class="shopping-item">
+                <div class="shopping-item__category">
+                  <ng-container *ngIf="categories$ | async as categories">
+                    {{ ECategories[categories[item.categoryId]] }}
+                  </ng-container>
+                </div>
+                <div class="shopping-item__name">{{ item.name }}</div>
+                <div class="shopping-item__desc">{{ item.description }}</div>
+              </div>
+              <div class="d-flex gap-4">
+                <a (click)="onEditItem(item)" class="shopping-item__edit-icon">
+                  <i class="bi bi-pencil"> </i>
+                </a>
+                <a (click)="onDeleteItem(item.id!)" class="shopping-item__delete-icon">
+                  <i class="bi bi-trash-fill"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+         </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="text-center">
+    <div class="spinner-border text-light" role="status"></div>
+  </div>
+</ng-template>
+
+<ng-template #noItems>
+  <div class="text-center">
+    No Items
+  </div>
+</ng-template>
+
