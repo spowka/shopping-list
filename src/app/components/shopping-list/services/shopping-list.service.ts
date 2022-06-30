@@ -5,10 +5,10 @@ import {
   AngularFirestore,
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
-  import { IShoppingItem } from '../models/shopping-list.model';
+import { IShoppingItem } from '../models/shopping-list.model';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { ICategory, IGroupedCategory } from '../models/categories.model';
-import { BehaviorSubject, Subscription, take } from 'rxjs';
+import { BehaviorSubject, Subscription, take, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -56,23 +56,31 @@ export class ShoppingListService {
   }
 
   public fetchShoppingList(categoryId?: string) {
-    this._loading$.next(false);
-
+    this._loading$.next(true);
     return this._afs.collection<IShoppingItem>(`users/${this.authService.uid}/shopping-list`, ref => (categoryId ? ref.where('categoryId', '==', categoryId) : ref))
-    .valueChanges({ idField: 'id' })
+      .valueChanges({ idField: 'id' })
+      .pipe(tap(_ => {
+        this._loading$.next(false)
+      }))
   }
 
-  public filterExpiredItems() {
-    const checkingDate = new Date().getTime()
-  
-    const shoppingListQuery = this._shoppingListCollection.ref.where('date', '<=', checkingDate);
+  // public filterExpiredItems() {
+  //   const Au = +new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney", hour: 'numeric', hour12: false });
+  //   if (Au >= 13) {
+  //     const AuDate = new Date().toLocaleString("en-US", { timeZone: "Australia/Sydney", day: 'numeric' });
+  //     const shoppingListQuery = this._shoppingListCollection.ref.where('date', '<', AuDate);
 
-    shoppingListQuery.get().then(shoppingList => {
-      shoppingList.forEach(element => {
-        element.ref.delete()
-      })
-    })
-  }
+  //     shoppingListQuery.get().then(shoppingList => {
+  //       if (shoppingList.empty) {
+  //         return;
+  //       }
+
+  //       shoppingList.forEach(element => {
+  //         element.ref.delete()
+  //       })
+  //     })
+  //   }
+  // }
 
   public addShoppingItem(data: IShoppingItem) {
     this._loading$.next(true);

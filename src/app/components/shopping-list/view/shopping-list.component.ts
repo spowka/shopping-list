@@ -36,7 +36,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.shoppingListService.fetchCategories();
     this.shoppingListService.fetchShoppingList();
-    this.shoppingListService.filterExpiredItems();
+    // this.shoppingListService.filterExpiredItems();
   }
 
   public onChangeCategory(categoryId?: string) {
@@ -52,13 +52,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.unsubscribe$.add(
       this.modalRef.closed.subscribe(res => {
         if (res) {
-          const expiredDate = new Date();
-
-          if (expiredDate.getHours() >= 13) {
-            expiredDate.setDate(expiredDate.getDate() + 1)
-          }
-
-          this.shoppingListService.addShoppingItem({ ...res, date: expiredDate.setHours(13, 0, 0, 0) });
+          // let AuDate = new Date().toLocaleString("en-US", {timeZone: "Australia/Sydney", day: "numeric"}); 
+          this.shoppingListService.addShoppingItem({ ...res });
         }
       })
     )

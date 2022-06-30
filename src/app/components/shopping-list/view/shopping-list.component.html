@@ -16,8 +16,12 @@
     </div>
 
     <div class="shoping-items">
-      <ng-container *ngIf="!(loading$ | async); else loadingSpinner">
-        <ng-container *ngIf="shoppingList$ | async as shoppingList">
+      <ng-container *ngIf="(loading$ | async)">
+        <div class="text-center">
+          <div class="spinner-border text-light" role="status"></div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="(shoppingList$ | async) as shoppingList">
          <ng-container *ngIf="shoppingList.length; else noItems">
           <div class="col shopping-item__wrapper" *ngFor="let item of shoppingList">
             <div class="shopping-item__info">
@@ -39,19 +43,12 @@
                 </a>
               </div>
             </div>
-          </div>
-         </ng-container>
+          </div>    
         </ng-container>
       </ng-container>
     </div>
   </div>
 </div>
-
-<ng-template #loadingSpinner>
-  <div class="text-center">
-    <div class="spinner-border text-light" role="status"></div>
-  </div>
-</ng-template>
 
 <ng-template #noItems>
   <div class="text-center">
